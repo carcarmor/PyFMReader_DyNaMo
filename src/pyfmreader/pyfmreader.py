@@ -8,6 +8,8 @@ from .jpk.loadjpkfile import loadJPKfile
 from .jpk.loadjpkthermalfile import loadJPKThermalFile
 from .nanosc.loadnanoscfile import loadNANOSCfile
 from .ps_nex.loadpsnexfile import loadPSNEXfile
+from .ardf.loadARDFfile import loadARDFfile
+from .ardf.loadibwfile import loadIBWfile
 from .load_uff import loadUFFtxt
 from .uff import UFF
 
@@ -21,6 +23,8 @@ def loadfile(filepath):
         - NANOSCOPE --> .spm, .pfc, .00X
         - UFF --> .uff
         - PS-NEX --> .tdms 
+        - IBW --> .ibw (Asylum files)
+        - ARDF --> .ARDF (Asylum force maps)
 
             Parameters:
                     filepath (str): Path to the file.
@@ -41,7 +45,6 @@ def loadfile(filepath):
     # extension: .jpk-force.zip
     if split_path[-1] == 'zip': filesuffix = split_path[-2]
     else: filesuffix = split_path[-1]
-
     uffobj = UFF()
 
     if filesuffix[1:].isdigit() or filesuffix in nanoscfiles:
@@ -59,6 +62,13 @@ def loadfile(filepath):
     elif filesuffix in psnexfiles:
         print("is the best")
         return loadPSNEXfile(filepath, uffobj)
+    
+    elif filesuffix in ibwfiles:
+        return loadIBWfile(filepath, uffobj)
+    
+    elif filesuffix in ARDFfiles:
+        print("is the best of the best")
+        return loadARDFfile(filepath, uffobj)
     
     else:
         Exception(f"Can not load file: {filepath}")
